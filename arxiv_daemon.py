@@ -30,7 +30,25 @@ if __name__ == '__main__':
     """
 
     # query string of papers to look for
-    q = 'cat:cs.CV+OR+cat:cs.LG+OR+cat:cs.CL+OR+cat:cs.AI+OR+cat:cs.NE+OR+cat:cs.RO'
+    #q = 'cat:cs.CV+OR+cat:cs.LG+OR+cat:cs.CL+OR+cat:cs.AI+OR+cat:cs.NE+OR+cat:cs.RO'
+    categories = ["cond-mat",
+                  "math-ph",
+                  "cond-mat.stat-mech",
+                  "physics.class-ph",
+                  "math.PR",
+                  "math.OA",
+                  "nlin.SI",
+                  "math.RT",
+                  "math.CO",
+                  "math.DS",
+                  "math.GR",
+                  "math.MP"]
+    
+    categories = list(map(lambda x: "cat:" + x,  categories))
+    q = "+OR+".join(categories)
+    q = q + "+ANDNOT+cat:cs"
+
+    print("Query {}".format(q))
 
     pdb = get_papers_db(flag='c')
     mdb = get_metas_db(flag='c')
@@ -50,6 +68,7 @@ if __name__ == '__main__':
         ntried = 0
         while True:
             try:
+                print("getting papers")
                 resp = get_response(search_query=q, start_index=k)
                 papers = parse_response(resp)
                 time.sleep(0.5)
